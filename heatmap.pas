@@ -69,7 +69,7 @@ function RGet(chn: byte; buffer: PByte): Tstring;
 *)
 var
      cnt  : byte;
-     tmp  : Tstring;
+     path : Tstring;
 begin
      asm {	
 
@@ -94,7 +94,7 @@ begin
 
      // Temporary string
 
-     tmp := '';
+     path := '';
 
      // Counter 
 
@@ -102,11 +102,11 @@ begin
 
      // Move result record to result variable
      While Peek(word(buffer) + cnt) <> $9b do begin
-          tmp := Concat(tmp, Chr(Peek(word(buffer) + cnt)));
+          path := Concat(path, Chr(Peek(word(buffer) + cnt)));
           Inc(cnt);
      end;
 
-     Result := tmp;
+     Result := path;
 end;
 
 
@@ -250,7 +250,7 @@ function FindFirstFreeChannel: byte;
 (*
 * @description:
 * Find first available IOCB channel
-*
+* Taken from: http://atariki.krap.pl/index.php/Programowanie:_Jak_wyszuka%C4%87_pierwszy_wolny_IOCB
 * @returns: (byte) - first available channel (multiplied by 16) number or error -95
 *)
 begin
@@ -266,7 +266,7 @@ ff_loop   lda icchid,x
           adc #$10
           tax
           bpl ff_loop
-          ldx #-95       ;kod błędu "TOO MANY CHANNELS OPEN"
+          ldx #-95       ; "TOO MANY CHANNELS OPEN"
 ff_found  stx Result
      };
 end;
@@ -340,7 +340,7 @@ function ConvertValue(rec: Tstring): integer;
 * Convert DIF record to Integer
 *
 * @param: (Tstring) rec - record
-* @returns: (Tstring) - Integer.
+* @returns: (Integer) - value as integer.
 *)
 begin
 
